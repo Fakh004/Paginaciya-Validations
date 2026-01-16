@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
 
 from .models import Book
 from .serializers import BookSerializer
@@ -19,20 +20,21 @@ class BookListCreateAPIView(APIView):
 
         if author:  
             queryset = queryset.filter(author__icontains=author)
-
         if genre:
             queryset = queryset.filter(genre__icontains=genre)
-
         if title:
             queryset = queryset.filter(title__icontains=title)
 
-        
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(queryset, request)
 
         serializer = BookSerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
+    @swagger_auto_schema(
+        request_body=BookSerializer,
+        responses={201: "Created", 400: "Validation error"}
+    )
     def post(self, request):
         serializer = BookSerializer(data=request.data)
 
