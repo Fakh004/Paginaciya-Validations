@@ -39,8 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_yasg',
+    'rest_framework_simplejwt.token_blacklist',
+
 
     'Book.apps.BookConfig',
+    'accounts.apps.AccountsConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -72,12 +76,14 @@ TEMPLATES = [
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
-        'TokenAuth': {
+        'Bearer': {
             'type': 'apiKey',
+            'name': 'Authorization',
             'in': 'header',
-            'name': 'Authorization'
+            'description': 'JWT Authorization header using the Bearer scheme. Example: "Bearer <token>"'
         }
-    }
+    },
+    'USE_SESSION_AUTH': False,
 }
 
 WSGI_APPLICATION = 'server.wsgi.application'
